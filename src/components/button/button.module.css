@@ -1,0 +1,53 @@
+.main-button {
+    background-color: #c5c349;
+    color: black;
+  }
+  
+  .main-button:hover {
+    background-color: #676603; /* Darker shade of yellow on hover */
+    color: white;
+  }
+  
+  .main-button:active {
+    border-color: #cbd5e0; /* Light gray border */
+    box-shadow: 0 0 0 2px #cbd5e0; /* Light gray border shadow */
+  }
+
+  .dbButton {
+    background-color: #b3bbc2;
+    color: black; /* Set text color to black */
+  }
+  
+  .dbButton:hover {
+    background-color: #475569; /* Darker shade of gray */
+    color: white; /* Text color on hover */
+  }
+  
+  .dbButton:active {
+    border-color: #cbd5e0; /* Light gray border */
+    box-shadow: 0 0 0 2px #cbd5e0; /* Light gray border shadow */
+  }
+
+  .contactButton {
+    background-color: #b3bbc2;
+    color: black; /* Text color */
+  }
+  
+  .contactButton:hover {
+    background-color: #475569; /* Darker shade on hover */
+    color: white; /* Text color on hover */
+  }
+  
+  .contactButton:active {
+    border-color: #cbd5e0; /* Light gray border */
+    box-shadow: 0 0 0 2px #cbd5e0; /* Light gray border shadow */
+  }
+
+  @media (max-width: 767px) {
+    .main-button,
+    .dbButton,
+    .contactButton {
+      padding: 10px 20px; /* Adjust padding for smaller screens */
+      font-size: 1rem; /* Adjust font size for smaller screens */
+    }
+  }

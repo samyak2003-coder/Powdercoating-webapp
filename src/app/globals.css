@@ -20,7 +20,7 @@ body {
   @apply bg-black text-white;
 }
 
-p, h1, h2,h3 {
+p, h1, h2 {
   color: white;
 }
 
