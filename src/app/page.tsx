@@ -6,9 +6,9 @@ export default function Home() {
   return (
     <>
       <Header />
-      <div className="flex justify-center mt-20">
-          <DbButton />
+      <div className="flex justify-center mt-20 space-x-10">
           <MainButton />
+          <DbButton />
       </div>
     </>
   );
