@@ -1,0 +1,42 @@
+/* container.module.css */
+.container {
+  width: 80vw; 
+  border: 1px solid white; 
+}
+
+.button {
+  background-color: #b3bbc2;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: black;
+  font-size: 1.3rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-items: center;
+}
+
+.button:hover {
+  background-color: #475569; 
+  color: white; 
+}
+
+.calender {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 1s ease;
+  color: black; /* Ensure calendar text is black */
+}
+
+.calender.show {
+  max-height:500px;
+}
+
+.calenderPopUp {
+  background-color: #b3bbc2;
+  color: black;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-top: 0.5px solid black;
+  cursor: pointer;
+}

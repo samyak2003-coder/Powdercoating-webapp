@@ -1,29 +1,29 @@
-.main-button {
-    background-color: #c5c349;
+.yellow-button {
+    background-color: #FFBF00;
     color: black;
   }
   
-  .main-button:hover {
-    background-color: #676603; /* Darker shade of yellow on hover */
+  .yellow-button:hover {
+    background-color: #d0a00e; /* Darker shade of yellow on hover */
     color: white;
   }
   
-  .main-button:active {
+  .yellow-button:active {
     border-color: #cbd5e0; /* Light gray border */
     box-shadow: 0 0 0 2px #cbd5e0; /* Light gray border shadow */
   }
 
-  .dbButton {
+  .grey-button {
     background-color: #b3bbc2;
     color: black; /* Set text color to black */
   }
   
-  .dbButton:hover {
+  .grey-button:hover {
     background-color: #475569; /* Darker shade of gray */
     color: white; /* Text color on hover */
   }
   
-  .dbButton:active {
+  .grey-button:active {
     border-color: #cbd5e0; /* Light gray border */
     box-shadow: 0 0 0 2px #cbd5e0; /* Light gray border shadow */
   }
@@ -44,7 +44,7 @@
   }
 
   @media (max-width: 767px) {
-    .main-button,
+    .yellow-button,
     .dbButton,
     .contactButton {
       padding: 10px 20px; /* Adjust padding for smaller screens */
