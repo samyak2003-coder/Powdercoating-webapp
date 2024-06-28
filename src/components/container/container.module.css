@@ -32,7 +32,7 @@
   max-height:500px;
 }
 
-.calenderPopUp {
+.calenderPopUp, .graphButton, .listButton {
   background-color: #b3bbc2;
   color: black;
   width: 1.75rem;
