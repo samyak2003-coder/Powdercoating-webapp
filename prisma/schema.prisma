@@ -1,0 +1,44 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db" // Ensure this path is correct for your setup
+}
+
+model DailyRecord {
+  id         Int       @id @default(autoincrement())
+  surfaceArea Int
+  timestamp  DateTime
+  products   Product[]
+}
+
+model MonthlyRecord {
+  id         Int       @id @default(autoincrement())
+  surfaceArea Int
+  timestamp  DateTime
+  products   Product[]
+}
+
+model YearlyRecord {
+  id         Int       @id @default(autoincrement())
+  surfaceArea Int
+  timestamp  DateTime
+  products   Product[]
+}
+
+model Product {
+  id         Int       @id @default(autoincrement())
+  productId  Int
+  productName String
+  timestamp  DateTime
+  dailyRecordId Int?
+  monthlyRecordId Int?
+  yearlyRecordId Int?
+  dailyRecord DailyRecord? @relation(fields: [dailyRecordId], references: [id])
+  monthlyRecord MonthlyRecord? @relation(fields: [monthlyRecordId], references: [id])
+  yearlyRecord YearlyRecord? @relation(fields: [yearlyRecordId], references: [id])
+}
