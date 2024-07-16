@@ -1,5 +1,3 @@
-// schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,35 +8,31 @@ datasource db {
 }
 
 model DailyRecord {
-  id         Int       @id @default(autoincrement())
-  surfaceArea Int
-  timestamp  DateTime
-  products   Product[]
+  TotalSurfaceAreaProduced   Int       @default(0)
+  Day                        DateTime  @unique @default(dbgenerated("(CURRENT_DATE)"))
+  products                   Product[] @relation("DailyProduct")
 }
 
 model MonthlyRecord {
-  id         Int       @id @default(autoincrement())
-  surfaceArea Int
-  timestamp  DateTime
-  products   Product[]
+  TotalSurfaceAreaProduced   Int       @default(0)
+  Month                      DateTime  @unique @default(dbgenerated("(CURRENT_DATE)"))
+  products                   Product[] @relation("MonthlyProduct")
 }
 
 model YearlyRecord {
-  id         Int       @id @default(autoincrement())
-  surfaceArea Int
-  timestamp  DateTime
-  products   Product[]
+  TotalSurfaceAreaProduced   Int       @default(0)
+  Year                       DateTime  @unique @default(dbgenerated("(CURRENT_DATE)"))
+  products                   Product[] @relation("YearlyProduct")
 }
 
 model Product {
-  id         Int       @id @default(autoincrement())
-  productId  Int
-  productName String
-  timestamp  DateTime
-  dailyRecordId Int?
-  monthlyRecordId Int?
-  yearlyRecordId Int?
-  dailyRecord DailyRecord? @relation(fields: [dailyRecordId], references: [id])
-  monthlyRecord MonthlyRecord? @relation(fields: [monthlyRecordId], references: [id])
-  yearlyRecord YearlyRecord? @relation(fields: [yearlyRecordId], references: [id])
+  id                       Int          @id @default(autoincrement())
+  productName              String
+  dailyRecordId            DateTime?
+  monthlyRecordId          DateTime?
+  yearlyRecordId           DateTime?
+  TotalSurfaceAreaProduced Int          @default(0)
+  dailyRecord              DailyRecord? @relation("DailyProduct", fields: [dailyRecordId], references: [Day])
+  monthlyRecord            MonthlyRecord? @relation("MonthlyProduct", fields: [monthlyRecordId], references: [Month])
+  yearlyRecord             YearlyRecord? @relation("YearlyProduct", fields: [yearlyRecordId], references: [Year])
 }
