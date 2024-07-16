@@ -3,7 +3,7 @@ First, run the development server:
 
 ```in git bash terminal
 npm install -> npm run dev
-to view the db -> npx prisma migrate
+to view the db -> npx prisma studio
 npm run dev
 # or
 yarn dev
