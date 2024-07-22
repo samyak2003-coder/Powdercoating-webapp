@@ -1,10 +1,9 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
-## Getting Started
 
 First, run the development server:
 
-```bash
+```in git bash terminal
+npm install -> npm run dev
+to view the db -> npx prisma studio
 npm run dev
 # or
 yarn dev
