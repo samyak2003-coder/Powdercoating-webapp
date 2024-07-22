@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db" // Ensure this path is correct for your setup
+}
+
+model DailyRecord {
+  TotalSurfaceAreaProduced   Int       @default(0)
+  Day                        DateTime  @unique @default(dbgenerated("(CURRENT_DATE)"))
+  products                   Product[] @relation("DailyProduct")
+}
+
+model MonthlyRecord {
+  TotalSurfaceAreaProduced   Int       @default(0)
+  Month                      DateTime  @unique @default(dbgenerated("(CURRENT_DATE)"))
+  products                   Product[] @relation("MonthlyProduct")
+}
+
+model YearlyRecord {
+  TotalSurfaceAreaProduced   Int       @default(0)
+  Year                       DateTime  @unique @default(dbgenerated("(CURRENT_DATE)"))
+  products                   Product[] @relation("YearlyProduct")
+}
+
+model Product {
+  id                       Int          @id @default(autoincrement())
+  mainPartNo               String
+  description              String
+  areaInSft                Float
+  dailyRecordId            DateTime?
+  monthlyRecordId          DateTime?
+  yearlyRecordId           DateTime?
+  TotalSurfaceAreaProduced Int          @default(0)
+  dailyRecord              DailyRecord? @relation("DailyProduct", fields: [dailyRecordId], references: [Day])
+  monthlyRecord            MonthlyRecord? @relation("MonthlyProduct", fields: [monthlyRecordId], references: [Month])
+  yearlyRecord             YearlyRecord? @relation("YearlyProduct", fields: [yearlyRecordId], references: [Year])
+}
