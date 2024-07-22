@@ -27,7 +27,9 @@ model YearlyRecord {
 
 model Product {
   id                       Int          @id @default(autoincrement())
-  productName              String
+  mainPartNo               String
+  description              String
+  areaInSft                Float
   dailyRecordId            DateTime?
   monthlyRecordId          DateTime?
   yearlyRecordId           DateTime?
