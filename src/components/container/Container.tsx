@@ -1,45 +1,67 @@
 "use client"
 import React, { useState } from 'react';
-import styles from './container.module.css';
-import Calender from "../calender/Calender"
-import Graph from "../graph/Graph"
+import Calender from "../calender/Calender";
+import Daily from "../graph/Daily";
+import Monthly from "../graph/Monthly";
+import Yearly from "../graph/Yearly";
 import { SlCalender } from "react-icons/sl";
-import { VscGraph } from "react-icons/vsc";
-import { FaTableList } from "react-icons/fa6";
 
 const Container: React.FC = () => {
   const [isCalenderVisible, setIsCalenderVisible] = useState(false);
+  const [visibleComponent, setVisibleComponent] = useState('Daily');
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const toggleCalender = () => {
     setIsCalenderVisible(!isCalenderVisible);
   };
 
+  const handleDateSelect = (day: number, month: number, year: number) => {
+    setSelectedDate(new Date(year, month - 1, day));
+  };
+
+  const renderComponent = () => {
+    switch (visibleComponent) {
+      case 'Daily':
+        return <Daily selectedDate={selectedDate} />;
+      case 'Monthly':
+        return <Monthly selectedDate={selectedDate} />;
+      case 'Yearly':
+        return <Yearly selectedDate={selectedDate} />;
+      default:
+        return <Daily selectedDate={selectedDate} />;
+    }
+  };
+
   return (
-    <>
-      <div className={`mx-auto w-80 mt-20 border border-white ${styles.container}`}>
-        <div className="grid grid-cols-3">
-          <button className={`${styles.button} hover:bg-gray-700 hover:text-white`}>
-            Daily
-          </button>
-          <button className={`${styles.button} hover:bg-gray-700 hover:text-white`}>
-            Monthly
-          </button>
-          <button className={`${styles.button} hover:bg-gray-700 hover:text-white`}>
-            Yearly
-          </button>
-        </div>
-        <SlCalender className={`${styles.calenderPopUp}`} onClick={toggleCalender} />
-        <div className={`${styles.calender} ${isCalenderVisible ? styles.show : ''}`}>
-          <Calender />
-        </div>
-        <Graph/>
-        <div className="flex flex-row gap-0.5">
-        <VscGraph className={`${styles.graphButton}`}/>
-        <FaTableList className={`${styles.graphButton}`}/>
-        </div>
- 
+    <div className="mx-auto w-4/5 mt-20 border border-gray-300 relative mb-8">
+      <div className="grid grid-cols-3">
+        <button
+          className="bg-gray-300 text-black text-xl border-none cursor-pointer transition duration-300 ease-in-out hover:bg-gray-700 hover:text-white"
+          onClick={() => setVisibleComponent('Daily')}
+        >
+          Daily
+        </button>
+        <button
+          className="bg-gray-300 py-2 text-black text-xl border-none cursor-pointer transition duration-300 ease-in-out hover:bg-gray-700 hover:text-white"
+          onClick={() => setVisibleComponent('Monthly')}
+        >
+          Monthly
+        </button>
+        <button
+          className="bg-gray-300 text-black text-xl border-none cursor-pointer transition duration-300 ease-in-out hover:bg-gray-700 hover:text-white"
+          onClick={() => setVisibleComponent('Yearly')}
+        >
+          Yearly
+        </button>
       </div>
-    </>
+      <SlCalender className="bg-gray-300 text-black w-7 h-7 border-t-2 border-black cursor-pointer" onClick={toggleCalender} />
+      <div className={`mb-4 overflow-hidden transition-all duration-1000 ${isCalenderVisible ? 'max-h-72' : 'max-h-0'}`}>
+        <Calender onDateSelect={handleDateSelect} />
+      </div>
+      <div className="transition transform duration-500 ease-in-out opacity-0 translate-y-5" style={{ opacity: visibleComponent ? 1 : 0, transform: visibleComponent ? 'translateY(0)' : 'translateY(-20px)' }}>
+        {renderComponent()}
+      </div>
+    </div>
   );
 };
 
