@@ -1,28 +1,10 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db" // Ensure this path is correct for your setup
+  url      = "file:./dev.db" // Adjust the path as needed
 }
 
-model DailyRecord {
-  TotalSurfaceAreaProduced   Int       @default(0)
-  Day                        DateTime  @unique @default(dbgenerated("(CURRENT_DATE)"))
-  products                   Product[] @relation("DailyProduct")
-}
-
-model MonthlyRecord {
-  TotalSurfaceAreaProduced   Int       @default(0)
-  Month                      DateTime  @unique @default(dbgenerated("(CURRENT_DATE)"))
-  products                   Product[] @relation("MonthlyProduct")
-}
-
-model YearlyRecord {
-  TotalSurfaceAreaProduced   Int       @default(0)
-  Year                       DateTime  @unique @default(dbgenerated("(CURRENT_DATE)"))
-  products                   Product[] @relation("YearlyProduct")
+generator client {
+  provider = "prisma-client-js"
 }
 
 model Product {
@@ -30,11 +12,40 @@ model Product {
   mainPartNo               String
   description              String
   areaInSft                Float
-  dailyRecordId            DateTime?
-  monthlyRecordId          DateTime?
-  yearlyRecordId           DateTime?
+  dailyRecordId            Int?
+  monthlyRecordId          Int?
+  yearlyRecordId           Int?
+  dailyRecord              DailyRecord? @relation("DailyProduct", fields: [dailyRecordId], references: [id])
+  monthlyRecord            MonthlyRecord? @relation("MonthlyProduct", fields: [monthlyRecordId], references: [id])
+  yearlyRecord             YearlyRecord? @relation("YearlyProduct", fields: [yearlyRecordId], references: [id])
+}
+
+model DailyRecord {
+  id                       Int       @id @default(autoincrement())
+  TotalSurfaceAreaProduced Int       @default(0)
+  Day                      Int
+  Month                    Int
+  Year                     Int
+  Hour                     Int
+  products                 Product[]   @relation("DailyProduct")
+  
+}
+
+model MonthlyRecord {
+  id                       Int          @id @default(autoincrement())
   TotalSurfaceAreaProduced Int          @default(0)
-  dailyRecord              DailyRecord? @relation("DailyProduct", fields: [dailyRecordId], references: [Day])
-  monthlyRecord            MonthlyRecord? @relation("MonthlyProduct", fields: [monthlyRecordId], references: [Month])
-  yearlyRecord             YearlyRecord? @relation("YearlyProduct", fields: [yearlyRecordId], references: [Year])
+  Day                      Int
+  Month                    Int
+  Year                     Int
+  products                 Product[]   @relation("MonthlyProduct")
+  
+}
+
+model YearlyRecord {
+  id                       Int          @id @default(autoincrement())
+  TotalSurfaceAreaProduced Int          @default(0)
+  Year                     Int
+  Month                    Int
+  products                 Product[]    @relation("YearlyProduct")
+  
 }
