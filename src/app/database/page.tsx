@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Header from "../../components/header/Header";
 import YellowButton from "../../components/button/YellowButton";
 import GreyButton from "../../components/button/GreyButton";
+import { FaRegImage } from 'react-icons/fa';
 
 export default function Database() {
   const [products, setProducts] = useState([]);
@@ -12,7 +13,7 @@ export default function Database() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`/api/products?timestamp=${new Date().getTime()}`);
+        const response = await fetch(`/api/products`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -44,6 +45,7 @@ export default function Database() {
               <tr>
                 <th className="py-2 text-center">ID</th>
                 <th className="py-2 text-center">Main Part No</th>
+                <th className="py-2 text-center">Image</th>
                 <th className="py-2 text-center">Description</th>
                 <th className="py-2 text-center">Area (sq. ft)</th>
               </tr>
@@ -53,6 +55,11 @@ export default function Database() {
                 <tr key={product.id} className="border-t border-gray-700 hover:bg-gray-800">
                   <td className="py-2 text-center">{product.id}</td>
                   <td className="py-2 text-center">{product.mainPartNo}</td>
+                  <td className="py-2 text-center">
+                    <a href={product.imageLink} target="_blank" rel="noopener noreferrer" className="flex justify-center">
+                      <FaRegImage className="text-white text-2xl" />
+                    </a>
+                  </td>
                   <td className="py-2 text-center">{product.description}</td>
                   <td className="py-2 text-center">{product.areaInSft}</td>
                 </tr>
@@ -63,5 +70,4 @@ export default function Database() {
       </div>
     </>
   );
-
 }
