@@ -15,6 +15,7 @@ model Product {
   dailyRecordId            Int?
   monthlyRecordId          Int?
   yearlyRecordId           Int?
+  imageLink                String       
   dailyRecord              DailyRecord? @relation("DailyProduct", fields: [dailyRecordId], references: [id])
   monthlyRecord            MonthlyRecord? @relation("MonthlyProduct", fields: [monthlyRecordId], references: [id])
   yearlyRecord             YearlyRecord? @relation("YearlyProduct", fields: [yearlyRecordId], references: [id])
