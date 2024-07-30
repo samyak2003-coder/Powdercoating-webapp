@@ -1,27 +1,26 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '../../lib/prisma'
+import type { NextApiRequest, NextApiResponse } from 'next';
+import prisma from '../../lib/prisma';
 
-export default async function handle(
-    req: NextApiRequest,
-    res: NextApiResponse,
-) {
+export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     const { month, year } = req.query;
 
-    // Validate month and year
-    if (!month || !year || isNaN(Number(month)) || isNaN(Number(year))) {
-        return res.status(400).json({ error: 'Invalid month or year' });
+    if (!month || !year) {
+        return res.status(400).json({ error: 'month and year are required.' });
     }
 
     try {
         const records = await prisma.monthlyRecord.findMany({
             where: {
-                Month: Number(month),
-                Year: Number(year),
+                month: parseInt(month as string, 10),
+                year: parseInt(year as string, 10),
+            },
+            include: {
+                monthlyProductRecords: true,
             },
         });
         return res.status(200).json(records);
     } catch (error) {
+        console.error('Error fetching records:', error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
-
