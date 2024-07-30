@@ -1,25 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend } from 'chart.js';
+import { FaRegImage } from 'react-icons/fa';
 
 // Register the components of Chart.js
 ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend);
 
+interface DailyProductRecord {
+    productId: number;
+    partNumber: string;
+    count: number;
+}
+
 interface DailyRecord {
-    TotalSurfaceAreaProduced: number;
-    Day: number;
-    Month: number;
-    Year: number;
-    Hour: number;
+    totalSurfaceAreaProduced: number;
+    day: number;
+    month: number;
+    year: number;
+    hour: number;
+    dailyProductRecords: DailyProductRecord[];
+}
+
+interface Product {
+    mainPartNo: string;
+    description: string;
+    imageLink: string;
 }
 
 interface DailyProps {
     selectedDate: Date;
-    className?: string;
 }
 
-const Daily: React.FC<DailyProps> = ({ className, selectedDate }) => {
+const Daily: React.FC<DailyProps> = ({ selectedDate }) => {
     const [data, setData] = useState<DailyRecord[]>([]);
+    const [products, setProducts] = useState<{ [key: string]: Product }>({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -30,12 +44,25 @@ const Daily: React.FC<DailyProps> = ({ className, selectedDate }) => {
             const year = selectedDate.getFullYear();
 
             try {
+                // Fetch daily records
                 const response = await fetch(`/api/daily?day=${day}&month=${month}&year=${year}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 const data = await response.json();
                 setData(data);
+
+                // Fetch products
+                const productsResponse = await fetch('/api/products');
+                if (!productsResponse.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const productsData = await productsResponse.json();
+                const productsMap = productsData.reduce((acc: { [key: string]: Product }, product: Product) => {
+                    acc[product.mainPartNo] = product;
+                    return acc;
+                }, {});
+                setProducts(productsMap);
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -47,15 +74,34 @@ const Daily: React.FC<DailyProps> = ({ className, selectedDate }) => {
     }, [selectedDate]);
 
     // Calculate total surface area and sum of surface areas per hour
-    const totalSurfaceArea = data.reduce((sum, record) => sum + record.TotalSurfaceAreaProduced, 0);
+    const totalSurfaceArea = data.reduce((sum, record) => sum + record.totalSurfaceAreaProduced, 0);
+
+    // Aggregate product counts
+    const productCounts: { [key: string]: { description: string; count: number; imageLink: string } } = {};
+    data.forEach(record => {
+        record.dailyProductRecords.forEach(productRecord => {
+            if (products[productRecord.partNumber]) {
+                const product = products[productRecord.partNumber];
+                if (productCounts[productRecord.partNumber]) {
+                    productCounts[productRecord.partNumber].count += productRecord.count;
+                } else {
+                    productCounts[productRecord.partNumber] = {
+                        description: product.description,
+                        count: productRecord.count,
+                        imageLink: product.imageLink,
+                    };
+                }
+            }
+        });
+    });
 
     // Prepare data for the line chart
     const chartData = {
-        labels: data.length > 0 ? data.map(record => `${record.Hour}:00`) : [],
+        labels: data.length > 0 ? data.map(record => `${record.hour}:00`) : [],
         datasets: [
             {
                 label: 'Surface Area Produced',
-                data: data.map(record => record.TotalSurfaceAreaProduced),
+                data: data.map(record => record.totalSurfaceAreaProduced),
                 borderColor: 'rgba(255, 191, 0,0.5)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderWidth: 1,
@@ -111,7 +157,7 @@ const Daily: React.FC<DailyProps> = ({ className, selectedDate }) => {
     const formattedDate = `${selectedDate.getDate().toString().padStart(2, '0')}/${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedDate.getFullYear()}`;
 
     return (
-        <div className={`w-full ${className}`}>
+        <div className={`w-full`}>
             <h1 className="text-xl font-bold mb-2 text-center">Daily Surface Area Production</h1>
             <p className="text-lg text-center mb-4">Graph for {formattedDate}</p>
             {loading && <p className="text-center">Loading...</p>}
@@ -125,6 +171,34 @@ const Daily: React.FC<DailyProps> = ({ className, selectedDate }) => {
                         <Line data={chartData} options={chartOptions} />
                     </div>
                     <p className="text-lg font-semibold text-center">Total Surface Area Produced: {totalSurfaceArea} sq. ft</p>
+                    <br />
+                    <div className="mt-8 w-full max-w-4xl">
+                        <h2 className="text-lg font-bold mb-4 text-center">Products Produced</h2>
+                        <table className="min-w-full">
+                            <thead>
+                                <tr>
+                                    <th className="py-2 px-4 border-b text-center">Part Number</th>
+                                    <th className="py-2 px-4 border-b text-center">Description</th>
+                                    <th className="py-2 px-4 border-b text-center">Count</th>
+                                    <th className="py-2 px-4 border-b text-center">Image</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {Object.keys(productCounts).map(partNo => (
+                                    <tr key={partNo}>
+                                        <td className="py-2 px-4 border-b text-center">{partNo}</td>
+                                        <td className="py-2 px-4 border-b text-center">{productCounts[partNo].description}</td>
+                                        <td className="py-2 px-4 border-b text-center">{productCounts[partNo].count}</td>
+                                        <td className="py-2 px-4 border-b text-center">
+                                            <a href={productCounts[partNo].imageLink} target="_blank" rel="noopener noreferrer" className="flex justify-center">
+                                                <FaRegImage className="text-white text-2xl" />
+                                            </a>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             )}
         </div>

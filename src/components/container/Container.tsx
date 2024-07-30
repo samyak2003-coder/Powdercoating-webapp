@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from 'react';
 import Calender from "../calender/Calender";
 import Daily from "../graph/Daily";
@@ -33,7 +33,7 @@ const Container: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto w-4/5 mt-20 border border-gray-300 relative mb-8">
+    <div className="mx-auto w-4/5 mt-20 border border-gray-300 relative mb-16 pb-16"> {/* Increased padding-bottom and margin-bottom */}
       <div className="grid grid-cols-3">
         <button
           className="bg-gray-300 text-black text-xl border-none cursor-pointer transition duration-300 ease-in-out hover:bg-gray-700 hover:text-white"

@@ -9,44 +9,62 @@ generator client {
 
 model Product {
   id                       Int          @id @default(autoincrement())
-  mainPartNo               String
-  description              String
+  mainPartNo               String       
+  description              String       
   areaInSft                Float
-  dailyRecordId            Int?
-  monthlyRecordId          Int?
-  yearlyRecordId           Int?
-  imageLink                String       
-  dailyRecord              DailyRecord? @relation("DailyProduct", fields: [dailyRecordId], references: [id])
-  monthlyRecord            MonthlyRecord? @relation("MonthlyProduct", fields: [monthlyRecordId], references: [id])
-  yearlyRecord             YearlyRecord? @relation("YearlyProduct", fields: [yearlyRecordId], references: [id])
+  imageLink                String?
 }
 
 model DailyRecord {
-  id                       Int       @id @default(autoincrement())
-  TotalSurfaceAreaProduced Int       @default(0)
-  Day                      Int
-  Month                    Int
-  Year                     Int
-  Hour                     Int
-  products                 Product[]   @relation("DailyProduct")
-  
+  id                       Int                 @id @default(autoincrement())
+  totalSurfaceAreaProduced Int                 @default(0)
+  day                      Int
+  month                    Int
+  year                     Int
+  hour                     Int
+  dailyProductRecords      DailyProductRecord[]
 }
 
 model MonthlyRecord {
-  id                       Int          @id @default(autoincrement())
-  TotalSurfaceAreaProduced Int          @default(0)
-  Day                      Int
-  Month                    Int
-  Year                     Int
-  products                 Product[]   @relation("MonthlyProduct")
-  
+  id                       Int                   @id @default(autoincrement())
+  totalSurfaceAreaProduced Int                   @default(0)
+  day                      Int
+  month                    Int
+  year                     Int
+  monthlyProductRecords    MonthlyProductRecord[]
 }
 
 model YearlyRecord {
-  id                       Int          @id @default(autoincrement())
-  TotalSurfaceAreaProduced Int          @default(0)
-  Year                     Int
-  Month                    Int
-  products                 Product[]    @relation("YearlyProduct")
-  
+  id                       Int                  @id @default(autoincrement())
+  totalSurfaceAreaProduced Int                  @default(0)
+  year                     Int
+  month                    Int
+  yearlyProductRecords     YearlyProductRecord[]
+}
+
+model DailyProductRecord {
+  id             Int        @id @default(autoincrement())
+  dailyRecordId  Int
+  productId      Int
+  partNumber     String
+  count          Int 
+  dailyRecord    DailyRecord @relation(fields: [dailyRecordId], references: [id])
+}
+
+model MonthlyProductRecord {
+  id              Int         @id @default(autoincrement())
+  monthlyRecordId Int
+  productId       Int
+  count           Int
+  partNumber      String
+  monthlyRecord   MonthlyRecord @relation(fields: [monthlyRecordId], references: [id])
+}
+
+model YearlyProductRecord {
+  id             Int         @id @default(autoincrement())
+  yearlyRecordId Int
+  productId      Int
+  count          Int
+  partNumber     String
+  yearlyRecord   YearlyRecord @relation(fields: [yearlyRecordId], references: [id])
 }
