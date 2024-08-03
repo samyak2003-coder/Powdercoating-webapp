@@ -33,7 +33,7 @@ const Container: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto w-4/5 mt-20 border border-gray-300 relative mb-16 pb-16"> {/* Increased padding-bottom and margin-bottom */}
+    <div className="mx-auto w-4/5 mt-20 border border-gray-300 relative mb-16 pb-16">
       <div className="grid grid-cols-3">
         <button
           className="bg-gray-300 text-black text-xl border-none cursor-pointer transition duration-300 ease-in-out hover:bg-gray-700 hover:text-white"
@@ -54,7 +54,13 @@ const Container: React.FC = () => {
           Yearly
         </button>
       </div>
-      <SlCalender className="bg-gray-300 text-black w-7 h-7 border-t-2 border-black cursor-pointer" onClick={toggleCalender} />
+      <button
+        className="flex items-center bg-[#FFBF00] text-black py-2 px-4 border-none cursor-pointer transition duration-300 ease-in-out hover:bg-[#d0a00e]"
+        onClick={toggleCalender}
+      >
+        <SlCalender className="w-7 h-7 mr-2" />
+        Calendar
+      </button>
       <div className={`mb-4 overflow-hidden transition-all duration-1000 ${isCalenderVisible ? 'max-h-72' : 'max-h-0'}`}>
         <Calender onDateSelect={handleDateSelect} />
       </div>

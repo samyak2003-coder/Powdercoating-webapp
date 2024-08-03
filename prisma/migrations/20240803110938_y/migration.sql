@@ -39,9 +39,9 @@ CREATE TABLE "DailyProductRecord" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "dailyRecordId" INTEGER NOT NULL,
     "productId" INTEGER NOT NULL,
+    "partNumber" TEXT NOT NULL,
     "count" INTEGER NOT NULL,
-    CONSTRAINT "DailyProductRecord_dailyRecordId_fkey" FOREIGN KEY ("dailyRecordId") REFERENCES "DailyRecord" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "DailyProductRecord_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "DailyProductRecord_dailyRecordId_fkey" FOREIGN KEY ("dailyRecordId") REFERENCES "DailyRecord" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -50,8 +50,8 @@ CREATE TABLE "MonthlyProductRecord" (
     "monthlyRecordId" INTEGER NOT NULL,
     "productId" INTEGER NOT NULL,
     "count" INTEGER NOT NULL,
-    CONSTRAINT "MonthlyProductRecord_monthlyRecordId_fkey" FOREIGN KEY ("monthlyRecordId") REFERENCES "MonthlyRecord" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "MonthlyProductRecord_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    "partNumber" TEXT NOT NULL,
+    CONSTRAINT "MonthlyProductRecord_monthlyRecordId_fkey" FOREIGN KEY ("monthlyRecordId") REFERENCES "MonthlyRecord" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -60,6 +60,6 @@ CREATE TABLE "YearlyProductRecord" (
     "yearlyRecordId" INTEGER NOT NULL,
     "productId" INTEGER NOT NULL,
     "count" INTEGER NOT NULL,
-    CONSTRAINT "YearlyProductRecord_yearlyRecordId_fkey" FOREIGN KEY ("yearlyRecordId") REFERENCES "YearlyRecord" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "YearlyProductRecord_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    "partNumber" TEXT NOT NULL,
+    CONSTRAINT "YearlyProductRecord_yearlyRecordId_fkey" FOREIGN KEY ("yearlyRecordId") REFERENCES "YearlyRecord" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
