@@ -2,6 +2,7 @@ import Header from "../components/header/Header";
 import YellowButton from "../components/button/YellowButton";
 import GreyButton from "../components/button/GreyButton";
 import Container from "../components/container/Container";
+import Contact from "../components/contact/Contacts"
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
         <GreyButton text="Database" href="/database" />
       </div>
       <Container />
+      <Contact />
     </>
   );
 }
