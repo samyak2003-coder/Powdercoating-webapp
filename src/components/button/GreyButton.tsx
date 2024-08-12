@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './button.module.css'; // Adjust the path as needed
+import Link from 'next/link';
 
 interface GreyButtonProps {
   text: string;
@@ -8,9 +8,12 @@ interface GreyButtonProps {
 
 const GreyButton: React.FC<GreyButtonProps> = ({ text, href }) => {
   return (
-    <a href={href} className={`${styles['grey-button']} block py-4 px-8 rounded-lg shadow-lg text-xl font-semibold mr-4 w-100 h-15 transition-all duration-150 ease-in-out`}>
+    <Link
+      href={href}
+      className="text-center text-md w-25 py-2  bg-gray-400 text-black rounded-lg shadow-lg text-xl font-semibold mr-4 w-full transition-all duration-300 ease-in-out hover:bg-gray-600 hover:text-white active:border-gray-300 active:shadow-md"
+    >
       {text}
-    </a>
+    </Link>
   );
 };
 

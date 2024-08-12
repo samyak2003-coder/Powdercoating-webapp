@@ -56,7 +56,7 @@ const Yearly: React.FC<YearlyProps> = ({ selectedDate }) => {
                 }, {});
                 setProducts(productsMap);
             } catch (error) {
-                let errorMessage = "Failed to do something exceptional";
+                let errorMessage = "Failed to fetch data";
                 if (error instanceof Error) {
                     errorMessage = error.message;
                 }
@@ -183,9 +183,9 @@ const Yearly: React.FC<YearlyProps> = ({ selectedDate }) => {
                             pointBorderWidth={2}
                             pointBorderColor={{ from: 'serieColor' }}
                             pointLabelYOffset={-12}
-                            enableCrosshair={false}
+                            enableCrosshair={true}
                             enableGridX={false}
-                            enableGridY={true}
+                            enableGridY={false}
                             colors={['rgba(255, 191, 0,0.5)']}
                             lineWidth={3}
                             enablePoints={true}

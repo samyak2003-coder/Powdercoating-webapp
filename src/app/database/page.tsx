@@ -37,8 +37,8 @@ export default function Database() {
         <YellowButton text="Database" href="/database" />
       </div>
       <div className="container mx-auto mt-10">
-        {loading && <p>Loading...</p>}
-        {error && <p className="text-red-500">Error: {error}</p>}
+        {loading && <p className="text-center text-gray-500">Loading...</p>}
+        {error && <p className="text-center text-red-500">Error: {error}</p>}
         {!loading && !error && (
           <table className="min-w-full bg-black text-white">
             <thead>

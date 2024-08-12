@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './button.module.css'; // Adjust the path as needed
+import Link from 'next/link';
 
 interface YellowButtonProps {
   text: string;
@@ -8,9 +8,12 @@ interface YellowButtonProps {
 
 const YellowButton: React.FC<YellowButtonProps> = ({ text, href }) => {
   return (
-    <a href={href} className={`${styles['yellow-button']} py-4 px-8 rounded-lg shadow-lg text-xl font-semibold w-100 h-15 transition-all duration-150 ease-in-out`}>
+    <Link
+      href={href}
+      className="text-center text-md w-25 py-2 md:w-40 md:py-5 lg:w-40 lg:py-5 bg-yellow-400 text-black  rounded-lg shadow-lg text-xl font-semibold transition-all duration-150 ease-in-out hover:bg-yellow-600 hover:text-white active:border-gray-300 active:shadow-md"
+    >
       {text}
-    </a>
+    </Link>
   );
 };
 

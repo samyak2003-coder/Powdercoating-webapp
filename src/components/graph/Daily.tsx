@@ -60,7 +60,7 @@ const Daily: React.FC<DailyProps> = ({ selectedDate }) => {
                 }, {});
                 setProducts(productsMap);
             } catch (error) {
-                let errorMessage = "Failed to do something exceptional";
+                let errorMessage = "Failed to fetch data";
                 if (error instanceof Error) {
                     errorMessage = error.message;
                 }
@@ -73,7 +73,7 @@ const Daily: React.FC<DailyProps> = ({ selectedDate }) => {
         fetchData();
     }, [selectedDate]);
 
-    // Calculate total surface area and sum of surface areas per hour
+    // Calculate total surface area
     const totalSurfaceArea = data.reduce((sum, record) => sum + record.totalSurfaceAreaProduced, 0);
 
     // Aggregate product counts
@@ -119,10 +119,6 @@ const Daily: React.FC<DailyProps> = ({ selectedDate }) => {
                 },
             },
             ticks: {
-                line: {
-                    stroke: '#ffffff',
-                    strokeWidth: 1,
-                },
                 text: {
                     fill: '#ffffff',
                 },
@@ -143,7 +139,7 @@ const Daily: React.FC<DailyProps> = ({ selectedDate }) => {
     const formattedDate = `${selectedDate.getDate().toString().padStart(2, '0')}/${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedDate.getFullYear()}`;
 
     return (
-        <div className={`w-full`}>
+        <div className="w-full">
             <h1 className="text-2xl font-bold mb-2 text-center">DAILY SURFACE AREA COATED</h1>
             <p className="text-lg text-center mb-4">Graph for {formattedDate}</p>
             {loading && <p className="text-center">Loading...</p>}
@@ -189,9 +185,9 @@ const Daily: React.FC<DailyProps> = ({ selectedDate }) => {
                             pointBorderWidth={2}
                             pointBorderColor={{ from: 'serieColor' }}
                             pointLabelYOffset={-12}
-                            enableCrosshair={false}
-                            enableGridX={false}
-                            enableGridY={true}
+                            enableCrosshair={true}
+                            enableGridX={false} // Disable vertical grid lines
+                            enableGridY={false} // Disable horizontal grid lines
                             colors={['rgba(255, 191, 0,0.5)']}
                             lineWidth={3}
                             enablePoints={true}

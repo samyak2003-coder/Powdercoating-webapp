@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "prisma generate && next build",
-    "start": "next start",
-    "lint": "next lint",
-    "prisma:seed": "ts-node prisma/seed.ts"
+    "dev": "yarn next dev",
+    "build": "yarn prisma generate && yarn next build",
+    "start": "yarn next start",
+    "lint": "yarn next lint",
+    "prisma:seed": "yarn ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@nextui-org/calendar": "^2.0.6",
@@ -36,6 +36,6 @@
     "typescript": "^5.5.2"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "yarn ts-node prisma/seed.ts"
   }
 }

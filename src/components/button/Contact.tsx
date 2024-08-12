@@ -1,16 +1,15 @@
 import React from 'react';
-import { FaPhoneAlt } from "react-icons/fa";
-import Link from 'next/link';
-import styles from './button.module.css'; // Import the CSS module
+import { FaPhoneAlt } from 'react-icons/fa';
+// import Link from 'next/link';
 
 const Contact = () => {
   return (
-    <Link href="#contact">
-      <div className={`flex items-center ${styles.contactButton} px-4 py-2 rounded shadow-md transition duration-300 ease-in-out hover:bg-gray-100`}>
+    <a href="/#contact">
+      <div className="flex items-center px-4 py-2 rounded shadow-md bg-gray-300 text-gray-600 transition duration-300 ease-in-out hover:bg-gray-400 cursor-pointer">
         <FaPhoneAlt className="mr-2" />
         <h3>Contact Us</h3>
       </div>
-    </Link>
+    </a>
   );
 };
 
