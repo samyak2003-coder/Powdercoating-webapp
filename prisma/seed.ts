@@ -1,5 +1,6 @@
-//sample file to add test data to db, delete when integrated with complete tech
 const { PrismaClient } = require('@prisma/client');
+const { randomInt } = require('crypto');
+
 const prisma = new PrismaClient();
 
 const products = [
@@ -57,31 +58,148 @@ const products = [
     { mainPartNo: '73297-104-51-FG', description: 'CAJA ENS BRANCH 5 POS 125A', areaInSft: 23.17, imageLink: 'http://localhost:3000/images/image.png' },
     { mainPartNo: '73297-114-51-FG', description: 'ENS CAJA BRANCH 3 POS 200A', areaInSft: 24.49, imageLink: 'http://localhost:3000/images/image.png' },
     { mainPartNo: '73297-121-52-FG', description: 'CAJA ENS. BRANCH. COMER. 20S-PUR', areaInSft: 26.43, imageLink: 'http://localhost:3000/images/image.png' },
-    { mainPartNo: '73297-153-51-FG', description: 'BERRERA ENS BRANCH 5 PS 125A', areaInSft: 6.29, imageLink: 'http://localhost:3000/images/image.png' },
-    { mainPartNo: '73297-156-50-FG', description: 'BERRERA ENS BRANCH 4 P 200A', areaInSft: 5.59, imageLink: 'http://localhost:3000/images/image.png' },
-    { mainPartNo: '73297-158-50-FG', description: 'BARRERA ENS BRANCH 3 POS 200A', areaInSft: 4.79, imageLink: 'http://localhost:3000/images/image.png' },
-    { mainPartNo: '73297-202-50-FG', description: 'ENS CUB INT BRANCH 5 POS 125A', areaInSft: 6.08, imageLink: 'http://localhost:3000/images/image.png' },
-    { mainPartNo: '73297-229-50-FG', description: 'ENS CUB INT BRANCH RES 3P 200A', areaInSft: 7.87, imageLink: 'http://localhost:3000/images/image.png' },
-    { mainPartNo: 'MTR11751-FG', description: 'ERMS BRACKET 1600-2000-PUR', areaInSft: 1.89, imageLink: 'http://localhost:3000/images/image.png' },
-    { mainPartNo: 'MTR12000-FG', description: 'BOX BLANK 1000A EUSERC M02 -PUR', areaInSft: 29.35, imageLink: 'http://localhost:3000/images/image.png' },
-    { mainPartNo: 'MTR12003-P', description: 'ASSY LEFT PANEL 1000A EUSERC-PUR', areaInSft: 13.26, imageLink: 'http://localhost:3000/images/image.png' },
+    { mainPartNo: '73297-153-51-FG', description: 'BERRERA ENS BRANCH 5 PS 125A', areaInSft: 6.29, imageLink: 'http://localhost:3000/images/image.png' }
+
 ];
 
-
 async function main() {
-    try {
-        // Insert products into the database
-        await prisma.product.createMany({
-            data: products,
-        });
-        console.log('Products have been inserted.');
-    } catch (e) {
-        console.error('Error inserting products:', e);
+    const surfaceAreaByHour: Record<number, number> = {};
+    const productIds: Record<string, number> = {};
+    const monthlySurfaceArea: Record<string, number> = {};
+    const yearlySurfaceArea: Record<string, number> = {};
+    const dailyProductRecords: Record<number, Record<string, number>> = {};
+
+    // Fetch existing products and their IDs
+    for (const product of products) {
+        try {
+            const existingProduct = await prisma.product.findFirst({
+                where: {
+                    mainPartNo: product.mainPartNo
+                }
+            });
+
+            if (!existingProduct) {
+                console.log(`Product with mainPartNo ${product.mainPartNo} does not exist.`);
+                continue;
+            }
+
+            // Store the product ID in the map
+            productIds[product.mainPartNo] = existingProduct.id;
+
+            // Calculate the current hour
+            const currentHour = new Date().getHours() - 1;
+            const currentDay = new Date().getDate();
+            const currentMonth = new Date().getMonth() + 1; // Months are 0-based in JS
+            const currentYear = new Date().getFullYear();
+
+            // Accumulate the surface area for the current hour
+            if (surfaceAreaByHour[currentHour]) {
+                surfaceAreaByHour[currentHour] += product.areaInSft;
+            } else {
+                surfaceAreaByHour[currentHour] = product.areaInSft;
+            }
+
+            // Accumulate the surface area for the current day, month, and year
+            if (!dailyProductRecords[currentDay]) {
+                dailyProductRecords[currentDay] = {};
+            }
+            if (dailyProductRecords[currentDay][product.mainPartNo]) {
+                dailyProductRecords[currentDay][product.mainPartNo] += 1;
+            } else {
+                dailyProductRecords[currentDay][product.mainPartNo] = 1;
+            }
+
+            const productArea = product.areaInSft;
+
+            // Monthly and yearly aggregates
+            monthlySurfaceArea[`${currentMonth}-${currentYear}`] = (monthlySurfaceArea[`${currentMonth}-${currentYear}`] || 0) + productArea;
+            yearlySurfaceArea[currentYear] = (yearlySurfaceArea[currentYear] || 0) + productArea;
+        } catch (error) {
+            console.error(`Error fetching product ${product.mainPartNo}:`, error);
+        }
+    }
+
+    // Insert aggregated records into DailyRecord
+    for (const [hour, totalSurfaceArea] of Object.entries(surfaceAreaByHour)) {
+        try {
+            await prisma.dailyRecord.create({
+                data: {
+                    totalSurfaceAreaProduced: totalSurfaceArea,
+                    day: new Date().getDate(),
+                    month: new Date().getMonth() + 1,
+                    year: new Date().getFullYear(),
+                    hour: parseInt(hour),
+                    dailyProductRecords: {
+                        create: Object.entries(productIds).map(([mainPartNo, id]) => ({
+                            productId: id,
+                            partNumber: mainPartNo,
+                            count: dailyProductRecords[new Date().getDate()][mainPartNo] || 0
+                        }))
+                    }
+                }
+            });
+        } catch (error) {
+            console.error(`Error inserting daily record for hour ${hour}:`, error);
+        }
+    }
+
+    // Insert aggregated records into MonthlyRecord
+    for (const [monthYear, totalSurfaceArea] of Object.entries(monthlySurfaceArea)) {
+        try {
+            await prisma.monthlyRecord.create({
+                data: {
+                    totalSurfaceAreaProduced: totalSurfaceArea + 20,
+                    day: 2, // Aggregated data does not have a specific day
+                    month: parseInt(monthYear.split('-')[0]),
+                    year: parseInt(monthYear.split('-')[1]),
+                    monthlyProductRecords: {
+                        create: Object.entries(dailyProductRecords).flatMap(([day, products]) => {
+                            return Object.entries(products).map(([partNumber, count]) => {
+                                return {
+                                    productId: productIds[partNumber],
+                                    partNumber,
+                                    count
+                                };
+                            });
+                        })
+                    }
+                }
+            });
+        } catch (error) {
+            console.error(`Error inserting monthly record for ${monthYear}:`, error);
+        }
+    }
+
+    // Insert aggregated records into YearlyRecord
+    for (const [year, totalSurfaceArea] of Object.entries(yearlySurfaceArea)) {
+        try {
+            await prisma.yearlyRecord.create({
+                data: {
+                    totalSurfaceAreaProduced: totalSurfaceArea + 10,
+                    year: parseInt(year),
+                    month: 1, // Aggregated data does not have a specific month
+                    yearlyProductRecords: {
+                        create: Object.entries(dailyProductRecords).flatMap(([day, products]) => {
+                            return Object.entries(products).map(([partNumber, count]) => {
+                                return {
+                                    productId: productIds[partNumber],
+                                    partNumber,
+                                    count
+                                };
+                            });
+                        })
+                    }
+                }
+            });
+        } catch (error) {
+            console.error(`Error inserting yearly record for ${year}:`, error);
+        }
     }
 }
 
 main()
     .catch(e => {
+        console.error(e);
         throw e;
     })
     .finally(async () => {

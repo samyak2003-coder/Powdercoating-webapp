@@ -8,13 +8,25 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      colors: {
+        'yellow-400': '#FFBF00',
+        'yellow-600': '#d0a00e',
+        'gray-400': '#b3bbc2',
+        'gray-600': '#475569',
+        'gray-300': '#cbd5e0',
+      },
+      boxShadow: {
+        'md': '0 0 0 2px #cbd5e0', // Light gray border shadow
+      },
+      height: {
+        '15': '3.75rem', // Height of 15 units
+      },
+      resize: {
+        'x-none': 'vertical', // Custom utility for disabling x-axis resize
       },
     },
   },
   plugins: [],
 };
+
 export default config;

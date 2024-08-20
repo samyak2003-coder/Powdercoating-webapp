@@ -60,7 +60,7 @@ const Daily: React.FC<DailyProps> = ({ selectedDate }) => {
                 }, {});
                 setProducts(productsMap);
             } catch (error) {
-                let errorMessage = "Failed to do something exceptional";
+                let errorMessage = "Failed to fetch data";
                 if (error instanceof Error) {
                     errorMessage = error.message;
                 }
@@ -73,7 +73,7 @@ const Daily: React.FC<DailyProps> = ({ selectedDate }) => {
         fetchData();
     }, [selectedDate]);
 
-    // Calculate total surface area and sum of surface areas per hour
+    // Calculate total surface area
     const totalSurfaceArea = data.reduce((sum, record) => sum + record.totalSurfaceAreaProduced, 0);
 
     // Aggregate product counts
@@ -119,10 +119,6 @@ const Daily: React.FC<DailyProps> = ({ selectedDate }) => {
                 },
             },
             ticks: {
-                line: {
-                    stroke: '#ffffff',
-                    strokeWidth: 1,
-                },
                 text: {
                     fill: '#ffffff',
                 },
@@ -143,7 +139,7 @@ const Daily: React.FC<DailyProps> = ({ selectedDate }) => {
     const formattedDate = `${selectedDate.getDate().toString().padStart(2, '0')}/${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedDate.getFullYear()}`;
 
     return (
-        <div className={`w-full`}>
+        <div className="w-full">
             <h1 className="text-2xl font-bold mb-2 text-center">DAILY SURFACE AREA COATED</h1>
             <p className="text-lg text-center mb-4">Graph for {formattedDate}</p>
             {loading && <p className="text-center">Loading...</p>}
@@ -153,91 +149,95 @@ const Daily: React.FC<DailyProps> = ({ selectedDate }) => {
             )}
             {!loading && !error && data.length > 0 && (
                 <div className="flex flex-col items-center">
-                    <div className="flex justify-center items-center w-full h-96 mb-4">
-                        <ResponsiveLine
-                            data={chartData}
-                            margin={{ top: 50, right: 110, bottom: 50, left: 70 }}
-                            xScale={{ type: 'point' }}
-                            yScale={{
-                                type: 'linear',
-                                min: 'auto',
-                                max: 'auto',
-                                stacked: false,
-                                reverse: false,
-                            }}
-                            curve="linear"
-                            axisTop={null}
-                            axisRight={null}
-                            axisBottom={{
-                                tickSize: 5,
-                                tickPadding: 5,
-                                tickRotation: 0,
-                                legend: 'Hour of the Day',
-                                legendOffset: 36,
-                                legendPosition: 'middle',
-                            }}
-                            axisLeft={{
-                                tickSize: 5,
-                                tickPadding: 5,
-                                tickRotation: 0,
-                                legend: 'Surface Area Produced (sq. ft)',
-                                legendOffset: -40,
-                                legendPosition: 'middle',
-                            }}
-                            pointSize={10}
-                            pointColor={{ from: 'color', modifiers: [] }}
-                            pointBorderWidth={2}
-                            pointBorderColor={{ from: 'serieColor' }}
-                            pointLabelYOffset={-12}
-                            enableCrosshair={false}
-                            enableGridX={false}
-                            enableGridY={true}
-                            colors={['rgba(255, 191, 0,0.5)']}
-                            lineWidth={3}
-                            enablePoints={true}
-                            enableArea={false}
-                            enableSlices="x"
-                            sliceTooltip={({ slice }) => {
-                                const total = slice.points.reduce((sum, point) => sum + (typeof point.data.y === 'number' ? point.data.y : 0), 0);
-                                return (
-                                    <div style={{ padding: '12px', background: 'rgba(0, 0, 0, 0.7)', color: '#ffffff' }}>
-                                        <div>Time/Date: {slice.points[0].data.xFormatted}, {formattedDate}</div>
-                                        <div>Total Surface Area: {total.toFixed(2)} sq. ft</div>
-                                    </div>
-                                );
-                            }}
-                            theme={chartTheme}
-                        />
+                    <div className="w-full max-w-6xl mx-auto mb-4 flex justify-center items-center">
+                        <div className="h-96 w-full">
+                            <ResponsiveLine
+                                data={chartData}
+                                margin={{ top: 50, right: 110, bottom: 50, left: 70 }}
+                                xScale={{ type: 'point' }}
+                                yScale={{
+                                    type: 'linear',
+                                    min: 'auto',
+                                    max: 'auto',
+                                    stacked: false,
+                                    reverse: false,
+                                }}
+                                curve="linear"
+                                axisTop={null}
+                                axisRight={null}
+                                axisBottom={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    legend: 'Hour of the Day',
+                                    legendOffset: 36,
+                                    legendPosition: 'middle',
+                                }}
+                                axisLeft={{
+                                    tickSize: 5,
+                                    tickPadding: 5,
+                                    tickRotation: 0,
+                                    legend: 'Surface Area Produced (sq. ft)',
+                                    legendOffset: -40,
+                                    legendPosition: 'middle',
+                                }}
+                                pointSize={10}
+                                pointColor={{ from: 'color', modifiers: [] }}
+                                pointBorderWidth={2}
+                                pointBorderColor={{ from: 'serieColor' }}
+                                pointLabelYOffset={-12}
+                                enableCrosshair={true}
+                                enableGridX={false} // Disable vertical grid lines
+                                enableGridY={false} // Disable horizontal grid lines
+                                colors={['rgba(255, 191, 0,0.5)']}
+                                lineWidth={3}
+                                enablePoints={true}
+                                enableArea={false}
+                                enableSlices="x"
+                                sliceTooltip={({ slice }) => {
+                                    const total = slice.points.reduce((sum, point) => sum + (typeof point.data.y === 'number' ? point.data.y : 0), 0);
+                                    return (
+                                        <div style={{ padding: '12px', background: 'rgba(0, 0, 0, 0.7)', color: '#ffffff' }}>
+                                            <div>Time/Date: {slice.points[0].data.xFormatted}, {formattedDate}</div>
+                                            <div>Total Surface Area: {total.toFixed(2)} sq. ft</div>
+                                        </div>
+                                    );
+                                }}
+                                theme={chartTheme}
+                            />
+                        </div>
                     </div>
 
                     <p className="text-lg font-semibold text-center">Total Surface Area Coated: {totalSurfaceArea} sq. ft</p>
                     <hr className="border-t-4 border-gray-300 w-full mb-8 mt-12" />
-                    <div className="mt-8 w-full max-w-4xl">
+                    <div className="mt-8 w-full max-w-6xl px-4 sm:px-6 md:px-8">
                         <h2 className="text-2xl font-bold mb-8 text-center">PRODUCTS COATED</h2>
-                        <table className="min-w-full">
-                            <thead>
-                                <tr>
-                                    <th className="py-2 px-4 border-b text-center">Part Number</th>
-                                    <th className="py-2 px-4 border-b text-center">Image</th>
-                                    <th className="py-2 px-4 border-b text-center">Description</th>
-                                    <th className="py-2 px-4 border-b text-center">Quantity</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {Object.keys(productCounts).map(partNo => (
-                                    <tr key={partNo}>
-                                        <td className="py-2 px-4 border-b text-center">{partNo}</td>
-                                        <td className="py-2 px-4 border-b text-center">
-                                            <a href={productCounts[partNo].imageLink} target="_blank" rel="noopener noreferrer" className="flex justify-center">
-                                                <FaRegImage className="text-white text-2xl" />
-                                            </a>
-                                        </td>
-                                        <td className="py-2 px-4 border-b text-center">{productCounts[partNo].description}</td>
-                                        <td className="py-2 px-4 border-b text-center">{productCounts[partNo].count}</td>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full bg-black text-white text-xs sm:text-sm md:text-base lg:text-lg">
+                                <thead>
+                                    <tr className="border-b border-gray-700">
+                                        <th className="py-2 px-3 sm:px-4 border-b text-center">Part Number</th>
+                                        <th className="py-2 px-3 sm:px-4 border-b text-center">Image</th>
+                                        <th className="py-2 px-3 sm:px-4 border-b text-center">Description</th>
+                                        <th className="py-2 px-3 sm:px-4 border-b text-center">Quantity</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {Object.keys(productCounts).map(partNo => (
+                                        <tr key={partNo} className="hover:bg-gray-800">
+                                            <td className="py-2 px-3 sm:px-4 border-b text-center">{partNo}</td>
+                                            <td className="py-2 px-3 sm:px-4 border-b text-center">
+                                                <a href={productCounts[partNo].imageLink} target="_blank" rel="noopener noreferrer">
+                                                    <FaRegImage className="inline-block text-xl" />
+                                                </a>
+                                            </td>
+                                            <td className="py-2 px-3 sm:px-4 border-b text-center">{productCounts[partNo].description}</td>
+                                            <td className="py-2 px-3 sm:px-4 border-b text-center">{productCounts[partNo].count}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             )}

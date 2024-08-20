@@ -1,7 +1,8 @@
- @tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Define custom properties for light and dark modes */
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -16,11 +17,15 @@
   }
 }
 
+/* Apply Tailwind utilities and custom styles */
 body {
   @apply bg-black text-white;
+
 }
 
-p, h1, h2 {
+/* Ensure that p, h1, and h2 have white text */
+p,
+h1,
+h2 {
   color: white;
 }
-
