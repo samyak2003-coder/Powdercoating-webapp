@@ -1,4 +1,3 @@
-// tailwind.config.ts
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -21,6 +20,9 @@ const config: Config = {
       },
       height: {
         '15': '3.75rem', // Height of 15 units
+      },
+      resize: {
+        'x-none': 'vertical', // Custom utility for disabling x-axis resize
       },
     },
   },

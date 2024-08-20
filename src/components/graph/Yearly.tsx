@@ -147,7 +147,7 @@ const Yearly: React.FC<YearlyProps> = ({ selectedDate }) => {
             {!loading && !error && data.length === 0 && <p className="text-center">No data available</p>}
             {!loading && !error && data.length > 0 && (
                 <div className="flex flex-col items-center">
-                    <div className="flex justify-center items-center w-full h-96 mb-8">
+                    <div className="flex justify-center items-center w-full h-96 max-w-6xl mb-8">
                         <ResponsiveLine
                             data={chartData}
                             margin={{ top: 50, right: 110, bottom: 50, left: 70 }}
@@ -207,30 +207,32 @@ const Yearly: React.FC<YearlyProps> = ({ selectedDate }) => {
                     <hr className="border-t-4 border-gray-300 w-full mb-8 mt-12" />
                     <div className="mt-8 w-full max-w-4xl">
                         <h2 className="text-2xl font-bold mb-8 text-center">PRODUCTS COATED</h2>
-                        <table className="min-w-full">
-                            <thead>
-                                <tr>
-                                    <th className="py-2 px-4 border-b text-center">Part Number</th>
-                                    <th className="py-2 px-4 border-b text-center">Image</th>
-                                    <th className="py-2 px-4 border-b text-center">Description</th>
-                                    <th className="py-2 px-4 border-b text-center">Quantity</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {Object.keys(productCounts).map(partNo => (
-                                    <tr key={partNo}>
-                                        <td className="py-2 px-4 border-b text-center">{partNo}</td>
-                                        <td className="py-2 px-4 border-b text-center">
-                                            <a href={productCounts[partNo].imageLink} target="_blank" rel="noopener noreferrer" className="flex justify-center">
-                                                <FaRegImage className="text-white text-2xl" />
-                                            </a>
-                                        </td>
-                                        <td className="py-2 px-4 border-b text-center">{productCounts[partNo].description}</td>
-                                        <td className="py-2 px-4 border-b text-center">{productCounts[partNo].count}</td>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full border-collapse">
+                                <thead>
+                                    <tr>
+                                        <th className="py-2 px-4 border-b text-center">Part Number</th>
+                                        <th className="py-2 px-4 border-b text-center">Image</th>
+                                        <th className="py-2 px-4 border-b text-center">Description</th>
+                                        <th className="py-2 px-4 border-b text-center">Quantity</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {Object.keys(productCounts).map(partNo => (
+                                        <tr key={partNo}>
+                                            <td className="py-2 px-4 border-b text-center">{partNo}</td>
+                                            <td className="py-2 px-4 border-b text-center">
+                                                <a href={productCounts[partNo].imageLink} target="_blank" rel="noopener noreferrer" className="flex justify-center">
+                                                    <FaRegImage className="text-white text-2xl" />
+                                                </a>
+                                            </td>
+                                            <td className="py-2 px-4 border-b text-center">{productCounts[partNo].description}</td>
+                                            <td className="py-2 px-4 border-b text-center">{productCounts[partNo].count}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             )}

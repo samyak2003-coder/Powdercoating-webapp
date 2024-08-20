@@ -10,7 +10,7 @@ const YellowButton: React.FC<YellowButtonProps> = ({ text, href }) => {
   return (
     <Link
       href={href}
-      className="text-center text-md w-25 py-2 md:w-40 md:py-5 lg:w-40 lg:py-5 bg-yellow-400 text-black  rounded-lg shadow-lg text-xl font-semibold transition-all duration-150 ease-in-out hover:bg-yellow-600 hover:text-white active:border-gray-300 active:shadow-md"
+      className="block text-center text-sm py-2 px-4 sm:text-base sm:py-3 sm:px-6 md:text-lg md:py-4 md:px-8 lg:text-xl lg:py-5 lg:px-10 bg-yellow-400 text-black rounded-lg shadow-lg font-semibold transition-all duration-300 ease-in-out hover:bg-yellow-600 hover:text-white active:border-gray-300 active:shadow-md"
     >
       {text}
     </Link>
